@@ -1,62 +1,77 @@
-## **CAR PRICE PREDICTION PROJECT** 
+# **CAR PRICE PREDICTION PROJECT** 
+
 - This project focused on predicting the car prices based on specific features such as the fuel type,selling price,mileage,transmission and the year of manufacture.
 - The project is structured in two Jupyter Notebook:
+  
 1. Car_Price_Prediction.ipynb- covers Part A: Data Cleaning and Preprocessing
 - Works with the origial raw dataset and includes all the datacleaning steps.Outputs the cleaned CSV file 'cleaned_cars.csv'
 2. Cleaned_car_price.ipynb - covers the other parts: Exploratory Data Analysis and Modellling
 
-#### Files include: 
+### Files include: 
 1. Car_Price_Prediction.ipynb
 2. Cleaned_Car_Price.ipynb
 3. cardekho.csv
 4. cleaned_cars.csv
 5. Readme.md
 
-#### Data Cleaning & Preprocessing
+## **Data Cleaning & Preprocessing**
 - Each step and the explanation
 1. Load Dataset
-The dataset was loaded into a pandas DataFrame using df=pd.read_csv('cardekho.csv'), and the first few rows were displayed with df.head() to examine the structure and understand what each column represents, such as year, mileage, fuel type, transmission, and selling price.
-2. Check for Missing Values
-To identify missing data, df.isnull().sum() was used to count null values, and the percentage of missing values was calculated using (missing_counts / len(df)) * 100. This highlights which columns may need imputation or cleaning.
+- The dataset was loaded into a pandas DataFrame using df=pd.read_csv('cardekho.csv'), and the first few rows were displayed with df.head() to examine the structure and understand what each column represents, such as year, mileage, fuel type, transmission, and selling price.
+
+3. Check for Missing Values
+- To identify missing data, df.isnull().sum() was used to count null values, and the percentage of missing values was calculated using (missing_counts / len(df)) * 100. This highlights which columns may need imputation or cleaning.
+
 #### Findings: 
 - `mileage(km/ltr/kg)` - 5% missing values  
 - `engine` → 2% missing values  
 - Other columns had negligible or no missing data.
-3. Drop Rows with Missing Target Values
+4. Drop Rows with Missing Target Values
 Rows with missing values in the target column selling_price were removed using df.dropna(subset=['selling_price']), since we cannot train a model on examples that lack the target variable.
-4. Impute Missing Mileage with Mean
-Missing values in the mileage column were filled using the column's average with df["mileage(km/ltr/kg)"]=df["mileage(km/ltr/kg)"].fillna(df["mileage(km/ltr/kg)"]).mean(). This helps preserve the dataset without unnecessarily dropping rows.
-Missing values for engine and seats column were median 
-5. Remove Duplicate Rows
+
+5. Impute Missing Mileage with Mean
+- Missing values in the mileage column were filled using the column's average with df["mileage(km/ltr/kg)"]=df["mileage(km/ltr/kg)"].fillna(df["mileage(km/ltr/kg)"]).mean(). This helps preserve the dataset without unnecessarily dropping rows.
+- Missing values for engine and seats column were median
+
+6. Remove Duplicate Rows
 To avoid skewing the model, duplicate rows were removed using df.drop_duplicates(), which ensures each data point contributes uniquely to model training.
 - 150 duplicate rows found and removed.
+- 
 6. Convert Year to Car Age
 The car’s age was calculated by subtracting the manufacture year from the current year (e.g., 2025), using df['car_age'] = 2025 - df['year'].
 - Findings 
 - Oldest car = 22 years  
 - Newest car = 1 year
+- 
 7. List Unique Fuel Types
-The unique fuel types were identified using df['fuel'].unique() to better understand the categories present and prepare for standardization
+- The unique fuel types were identified using df['fuel'].unique() to better understand the categories present and prepare for standardization
 #### Findings:
 - Fuel types: `Petrol, Diesel, CNG, LPG, Electric`  
-- Transmission: `Manual, Automatic` 
+- Transmission: `Manual, Automatic`
+
 8. Standardize Transmission Values
-Inconsistent values in the transmission column were standardized using string methods like df['transmission'].str.capitalize() to ensure consistent labeling (e.g., "manual" and "Manual" were made identical).
+- Inconsistent values in the transmission column were standardized using string methods like df['transmission'].str.capitalize() to ensure consistent labeling (e.g., "manual" and "Manual" were made identical).
+  
 9. Outlier Detection Using Boxplot
-Outliers in the selling_price column were visually identified using a boxplot created with seaborn: sns.boxplot(x=df['selling_price']). This helps detect and later address extreme values.
+- Outliers in the selling_price column were visually identified using a boxplot created with seaborn: sns.boxplot(x=df['selling_price']). This helps detect and later address extreme values.
+  
 10. Remove Unrealistic Prices
-Cars priced below 10,000 or above 5,000,000 were removed using df[(df['selling_price'] >= 10000) & (df['selling_price'] <= 5000000)], as such entries were likely errors or extreme outliers that could mislead the model.
+- Cars priced below 10,000 or above 5,000,000 were removed using df[(df['selling_price'] >= 10000) & (df['selling_price'] <= 5000000)], as such entries were likely errors or extreme outliers that could mislead the model.
+  
 11. Standardize Column Names
-All column names were reformatted for consistency using df.columns.str.lower().str.replace(' ', '_'), converting them to lowercase and replacing spaces with underscores for easier access in code.
+- All column names were reformatted for consistency using df.columns.str.lower().str.replace(' ', '_'), converting them to lowercase and replacing spaces with underscores for easier access in code.
+  
 12. Confirming if the numeric columns were in the correct datatype
-Checking  if any numerical columns are stored as strings and convert them to numbers.
-df.dtypes
+- Checking  if any numerical columns are stored as strings and convert them to numbers. df.dtypes
+  
 13. Create “Price per Kilometer” Feature
-A new column was created by dividing the price by the mileage:df["price_per_kilometer"] = df["selling_price"] / df["mileage(km/ltr/kg)"]
+- A new column was created by dividing the price by the mileage:df["price_per_kilometer"] = df["selling_price"] / df["mileage(km/ltr/kg)"]
+  
 14.Reset the Index
-After cleaning operations, the index was reset using df.reset_index(drop=True) to ensure the DataFrame has a clean, continuous index.
+- After cleaning operations, the index was reset using df.reset_index(drop=True) to ensure the DataFrame has a clean, continuous index.
+  
 15. Save Cleaned Dataset
-The cleaned DataFrame was saved to a new CSV file using df.to_csv('cleaned_cars.csv', index=False), which was then used for analysis and modeling in the next notebook.
+- The cleaned DataFrame was saved to a new CSV file using df.to_csv('cleaned_cars.csv', index=False), which was then used for analysis and modeling in the next notebook.
 
 #### Results & Observations
 - Dataset reduced from 7,850 to 7,700 records  after removing duplicates & outliers.
@@ -115,7 +130,7 @@ Top 5 most frequent combinations:
 5. CNG – Manual (**56 cars**)  
 
 
-### Machine Learning
+## **Machine Learning**
 
 31. Assumptions of Linear Regression
 - **Linearity**: Checked via scatter plots (e.g., `selling_price` vs `price_per_kilometer`). Selling price showed strong linearity; others were weaker.  
